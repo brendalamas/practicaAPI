@@ -84,6 +84,7 @@ botonNuevoUsuario.onclick =()=>{
     e.preventDefault()
     crearNuevoUsuario()
     nuevoForm.classList.add("is-hidden")
+    tabla.classList.remove("is-hidden")
   }
 
   // BOTON CANCELAR //
@@ -128,6 +129,8 @@ const editarUsuario = () => {
       botonEnviarEd.onclick = (e) => {
         e.preventDefault()
         formularioEditado.classList.add("is-hidden")
+        tabla.classList.remove("is-hidden")
+
         fetch(`https://601da02bbe5f340017a19d60.mockapi.io/users/${id}`,{
           method:"PUT",
           body: JSON.stringify({
