@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+</head>
+<body>
+    <!-- TITULO -->
+    <section class="hero is-warning">
+        <div class="hero-body">
+            <h1 class="title is-1 has-text-centered has-text-weight-bold is-family-monospace">Ejercicio utilizando API</h1>
+        </div>
+        <div class="subtitle has-text-right mb-4 mr-4">
+            <button class="boton-nuevo-usuario button is-warning is-light is-family-monospace">Agregar nuevo usuario</button>    
+        </div>
+    </section>
+
+    <!-- FORMULARIO NUEVO -->
+    <div id="crear-nuevo-form" class="is-hidden columns has-background-warning-light">
+        <div class="column is-offset-3 is-6">
+            <form class="is-family-monospace" >
+                <h1 class="subtitle is-1 mt-4">Crear nuevo usuario</h1>
+
+                <label class="label has-text-warning-dark"> Nombre
+                    <input class="input is-warning" type="text" name="Nombre" id="nombre">
+                </label>
+
+                <label class="label has-text-warning-dark"> Email
+                    <input class="input is-warning" type="email" name="Email" id="email">
+                </label>
+
+                <label class="label has-text-warning-dark"> Direccion
+                    <input class="input is-warning" type="text" name="Direccion" id="direccion">
+                </label>
+
+                <label class="label has-text-warning-dark"> Telefono
+                    <input class="input is-warning" type="number" name="Telefono" id="telefono">
+                </label>
+
+                <button id="boton-enviar" class="button is-warning is-family-monospace"> Enviar</button>
+                <button id="boton-cancelar" class="button is-warning is-family-monospace"> Cancelar </button>
+            </form>
+        </div>
+        
+    </div>
+    
+    <!-- FORMULARIO PARA EDITAR -->
+    <div id="formulario-editado" class="columns is-hidden has-background-warning-light">
+        <div class="column is-offset-3 is-6">
+            <form class="is-family-monospace">
+                <h1 class="subtitle is-1 mt-4">Editar nuevo usuario</h1>
+                <label class="label has-text-warning-dark"> Nombre
+                      <input class="input is-warning" type="text" name="Nombre" id="nombre-nuevo">
+                </label>
+                <label class="label has-text-warning-dark"> Email
+                    <input class="input is-warning" type="email" name="Email" id="email-nuevo">
+                </label>
+                <label class="label has-text-warning-dark"> Direccion
+                    <input class="input is-warning" type="text" name="Direccion" id="direccion-nuevo">
+                </label>
+                <label class="label has-text-warning-dark"> Telefono
+                    <input class="input is-warning" type="number" name="Telefono" id="telefono-nuevo">
+                </label>
+                <button id="boton-enviar-ed" class="button is-warning"> Enviar</button>
+                <button id="boton-cancelar-ed" class="button is-warning"> Cancelar </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- TABLA EN JS -->
+    <table id="tabla" class="table is-narrow is-fullwidth mt-2"></table>
+
+
+<script src="./index.js"></script>
+</body>
+</html>
