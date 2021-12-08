@@ -15,19 +15,83 @@ const inputTelefonoNuevo = document.querySelector("#telefono-nuevo")
 const botonEnviarEd = document.querySelector("#boton-enviar-ed")
 const botonCancelarEd = document.querySelector("#boton-cancelar-ed")
 
-//INFORMACION ACTUALIZADA //
+///////////////////////////////////// FUNCIONES AUXILIARES /////////////////////////////////////
+
+// actualiza informacion
 const actualizarInformacion = () => {
   fetch("https://601da02bbe5f340017a19d60.mockapi.io/users")
     .then((res) => res.json())
     .then((data) => {
       crearTablaHTML(data);
-      eliminarUsuario()
-      editarUsuario()
     })
 }
+// Crea nuevo usuario 
+const crearNuevoUsuario = () => {
+  fetch("https://601da02bbe5f340017a19d60.mockapi.io/users",{
+    method: "POST",
+    body: JSON.stringify({
+      fullname: inputNombre.value, 
+      email: inputEmail.value,
+      address: inputDireccion.value,
+      phone: inputTelefono.value
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }).then((res) => res.json())
+  .then((data)=>{
+    actualizarInformacion(data)
+  })
+}
+
+// elimina usuario 
+const eliminarUsuario =(id)=>{
+  fetch(`https://601da02bbe5f340017a19d60.mockapi.io/users/${id}`,{
+      method: "DELETE",
+      }).then((res) => res.json())
+      .then((data)=>{
+        console.log(data);
+        actualizarInformacion()
+      })
+}
+
+// edita usuario
+const editarUsuario =(id)=>{
+  fetch(`https://601da02bbe5f340017a19d60.mockapi.io/users/${id}`,{
+  method:"PUT",
+  body: JSON.stringify({
+    fullname: inputNombreNuevo.value,
+    email: inputEmailNuevo.value,
+    address: inputDireccionNuevo.value,
+    phone :inputTelefonoNuevo.value,
+  }),
+  headers: {
+    "Content-Type": "application/json"
+  }
+  }).then((res)=> res.json())
+  .then((data)=>{
+    actualizarInformacion()
+  })
+}
+
+const mostrarUsuario =(id)=>{
+  fetch (`https://601da02bbe5f340017a19d60.mockapi.io/users/${id}`)
+  .then((res)=> res.json())
+  .then((data)=>{
+    inputNombreNuevo.value = data.fullname,
+    inputEmailNuevo.value = data.email;
+    inputDireccionNuevo.value = data.address;
+    inputTelefonoNuevo.value = data.phone;
+
+  })
+}
+
+/////////////////////////////////// FUNCIONES DE EVENTOS ///////////////////////////////////
+
+// actualiza informacion
 actualizarInformacion()
 
-// TABLA //
+// tabla
 const crearTablaHTML = (data) => {
   const tabla = document.querySelector("#tabla")
   const html = data.reduce((acc, curr) => {
@@ -55,100 +119,49 @@ const crearTablaHTML = (data) => {
     </tr>`
   );
   tabla.innerHTML = html
-}
-// CREAR NUEVO USUARIO //
-const crearNuevoUsuario = () => {
-  fetch("https://601da02bbe5f340017a19d60.mockapi.io/users",{
-    method: "POST",
-    body: JSON.stringify({
-      fullname: inputNombre.value, 
-      email: inputEmail.value,
-      address: inputDireccion.value,
-      phone: inputTelefono.value
-    }),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }).then((res) => res.json())
-  .then((data)=>{
-    actualizarInformacion(data)
-  })
+  botonEliminarUsuario()
+  botonEditarUsuario()
 }
 
+// agrega nuevo usuario
 botonNuevoUsuario.onclick =()=>{
   nuevoForm.classList.remove("is-hidden")
   tabla.classList.add("is-hidden")
   
-  // AGREGAR NUEVO USUARIO //
+  // boton enviar form con nuevo usuario
   botonEnviar.onclick=(e)=>{
     e.preventDefault()
     crearNuevoUsuario()
     nuevoForm.classList.add("is-hidden")
     tabla.classList.remove("is-hidden")
   }
-
-  // BOTON CANCELAR //
+  // boton cancelar
   botonCancelar.onclick=()=>{
   nuevoForm.classList.add("is-hidden")
   }
 }
 
-// ELIMINAR USUARIO //
-const eliminarUsuario = () => {
-  const botonEliminar = document.querySelectorAll(".boton-eliminar")
-  for (let i = 0; i < botonEliminar.length; i++) {
 
-    botonEliminar[i].onclick =()=>{
-      const id = botonEliminar[i].id
-
-      fetch(`https://601da02bbe5f340017a19d60.mockapi.io/users/${id}`,{
-      method: "DELETE",
-      headers: {
-        "Content-Type" : "application/json"
-      }
-      }).then((res) => res.json())
-      .then((data)=>{
-        actualizarInformacion()
-      })
-
-    }
-  }
-}
-
-//EDITAR USUARIO//
-const editarUsuario = () => {
+// editar usuario
+const botonEditarUsuario = () => {
   const botonEditar = document.querySelectorAll(".boton-editar")
   for (let i = 0; i < botonEditar.length; i++) {
     botonEditar[i].onclick = ()=>{
       formularioEditado.classList.remove("is-hidden")
       tabla.classList.add("is-hidden")
-      
       const id = botonEditar[i].id
+      editarUsuario(id)
       mostrarUsuario(id)
-      
+
+      // boton enviar form editado
       botonEnviarEd.onclick = (e) => {
         e.preventDefault()
         formularioEditado.classList.add("is-hidden")
         tabla.classList.remove("is-hidden")
-
-        fetch(`https://601da02bbe5f340017a19d60.mockapi.io/users/${id}`,{
-          method:"PUT",
-          body: JSON.stringify({
-            fullname: inputNombreNuevo.value,
-            email: inputEmailNuevo.value,
-            address: inputDireccionNuevo.value,
-            phone :inputTelefonoNuevo.value,
-          }),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }).then((res)=> res.json())
-        .then((data)=>{
-          actualizarInformacion()
-        })
-
+        editarUsuario()
       }
-      // BOTON CANCELAR //
+      
+      // boton cancelar 
       botonCancelarEd.onclick=()=>{
         formularioEditado.classList.remove("is-hidden")
       }
@@ -156,17 +169,16 @@ const editarUsuario = () => {
   }
 }
 
+// elimina usuario
+const botonEliminarUsuario = () => {
+  const botonEliminar = document.querySelectorAll(".boton-eliminar")
+  for (let i = 0; i < botonEliminar.length; i++) {
 
-const mostrarUsuario =(id)=>{
-  fetch (`https://601da02bbe5f340017a19d60.mockapi.io/users/${id}`)
-  .then((res)=> res.json())
-  .then((data)=>{
-    inputNombreNuevo.value = data.fullname,
-    inputEmailNuevo.value = data.email;
-    inputDireccionNuevo.value = data.address;
-    inputTelefonoNuevo.value = data.phone;
-
-  })
+    botonEliminar[i].onclick =()=>{
+      const id = botonEliminar[i].id
+      eliminarUsuario(id)
+    }
+  }
 }
 
 
